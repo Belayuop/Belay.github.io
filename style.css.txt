@@ -1,0 +1,158 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+header {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+header h1 {
+    margin: 0;
+}
+nav {
+    background-color: #2E8B57; /* Dark Green */
+    overflow: hidden;
+}
+nav a {
+    float: left;
+    display: block;
+    color: white;
+    padding: 14px 20px;
+    text-align: center;
+    text-decoration: none;
+}
+nav a:hover {
+    background-color: #3CB371; /* Lighter Green */
+}
+section {
+    padding: 60px 20px;
+}
+.container {
+    width: 80%;
+    margin: auto;
+}
+.intro, .skills, .portfolio, .contact {
+    background-color: white;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.intro h2, .skills h2, .portfolio h2, .contact h2 {
+    margin-top: 0;
+}
+.skills ul, .portfolio ul {
+    list-style: none;
+    padding: 0;
+}
+.skills ul li, .portfolio ul li {
+    background-color: #f1f1f1;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 5px;
+}
+footer {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Button style */
+input[type="submit"] {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+    color: white;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+input[type="submit"]:active {
+    background-color: #388E3C;
+}
+
+/* Social Media Icons */
+.social-icons {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.social-icons a {
+    margin: 0 10px;
+    font-size: 30px;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    opacity: 0.8;
+}
+
+.facebook {
+    color: #1877F2;
+}
+
+.linkedin {
+    color: #0A66C2;
+}
+
+.youtube {
+    color: #FF0000;
+}
+
+.telegram {
+    color: #0088CC;
+}
+
+/* Portfolio */
+.portfolio h3, .skills h3 {
+    color: #2E8B57; /* Dark Green */
+}
+
+/* Smaller text for Portfolio and Skills descriptions */
+.portfolio ul li, .skills ul li {
+    font-size: 0.9rem;
+}
+
+/* Contact Section */
+.contact label {
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.contact input, .contact textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.contact textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.contact textarea {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}

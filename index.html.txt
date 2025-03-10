@@ -1,0 +1,274 @@
+Belay🇪🇹, [3/7/2025 10:31 AM]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belay Kassanew - Personal Website</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav {
+            background-color: #2E8B57; /* Dark Green */
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            padding: 14px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #3CB371; /* Lighter Green */
+        }
+        section {
+            padding: 60px 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .intro, .skills, .portfolio, .contact {
+            background-color: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .intro h2, .skills h2, .portfolio h2, .contact h2 {
+            margin-top: 0;
+        }
+        .skills ul, .portfolio ul {
+            list-style: none;
+            padding: 0;
+        }
+        .skills ul li, .portfolio ul li {
+            background-color: #f1f1f1;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        footer {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Button style */
+        input[type="submit"] {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;  /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s ease-in-out;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+            transform: scale(1.05);  /* Slight zoom effect on hover */
+        }
+
+        input[type="submit"]:active {
+            background-color: #388E3C;
+        }
+
+        /* Social Media Icons */
+        .social-icons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            font-size: 30px;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            opacity: 0.8;
+        }
+
+        /* Facebook Blue */
+        .facebook {
+            color: #1877F2;
+        }
+
+        /* LinkedIn Blue */
+        .linkedin {
+            color: #0A66C2;
+        }
+
+        /* YouTube Red */
+        .youtube {
+            color: #FF0000;
+        }
+
+        /* Telegram Blue */
+        .telegram {
+            color: #0088CC;
+        }
+
+        /* Portfolio */
+        .portfolio h3, .skills h3 {
+            color: #2E8B57; /* Dark Green */
+        }
+
+        /* Smaller text for Portfolio and Skills descriptions */
+        .portfolio ul li, .skills ul li {
+            font-size: 0.9rem;  /* Reduced font size */
+        }
+
+        /* Contact Section */
+        .contact label {
+            font-size: 1rem;  /* Slightly smaller font */
+            display: block;
+            margin-bottom: 5px;
+        }
+
+Belay🇪🇹, [3/7/2025 10:31 AM]
+.contact input, .contact textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .contact textarea {
+            height: 150px; /* Height of the message box */
+            resize: vertical; /* Allow resizing of the textarea */
+        }
+
+        /* Text Area Visibility Fix */
+        .contact textarea {
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Belay Kassanew</h1>
+    <p>Computer Science and Public Health Student</p>
+</header>
+
+<nav>
+    <a href="#intro">Home</a>
+    <a href="#skills">Skills</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="intro" class="intro">
+    <div class="container">
+        <h2>About Me</h2>
+        <p>Hi, I’m Belay Kassanew, a Computer Science and Public Health student. I’m passionate about technology, smart homes, and improving public health. I teach online, work on IoT projects, and conduct research in epidemiology.</p>
+        
+        <!-- Image with reduced size and positioned top-left -->
+        <img src="https://assets.onecompiler.app/43b3p9k7g/43b3pk7rq/photo_2024-10-06_22-15-36.jpg" 
+             alt="Belay Kassanew" 
+             style="width: 100px; height: auto; position: absolute; top: 20px; left: 20px; border-radius: 8px;">
+    </div>
+</section>
+
+<section id="skills" class="skills">
+    <div class="container">
+        <h2>Skills</h2>
+        <ul>
+            <li><strong>Web Development</strong></li>
+            <li><strong>Teaching</strong></li>
+            <li><strong>Research</strong></li>
+            <li><strong>Graphic Design</strong></li>
+        </ul>
+    </div>
+</section>
+
+<section id="portfolio" class="portfolio">
+    <div class="container">
+        <h2>Portfolio</h2>
+        <h3>Web Development</h3>
+        <ul>
+            <li>Smart Home System</li>
+            <li>Health Dashboard</li>
+            <li>Portfolio Website</li>
+            <li>IoT Projects</li>
+        </ul>
+
+        <h3>Epidemiological Research</h3>
+        <ul>
+            <li>Air Pollution Study</li>
+            <li>COVID-19 Data Analysis</li>
+            <li>Mental Health & Urbanization</li>
+            <li>Health Trends Analysis</li>
+        </ul>
+
+        <h3>Graphic Design</h3>
+        <ul>
+            <li>Health Campaigns</li>
+            <li>Web UI Mockups</li>
+            <li>Infographics</li>
+            <li>Branding</li>
+        </ul>
+    </div>
+</section>
+
+<section id="contact" class="contact">
+    <div class="container">
+        <h2>Contact Me</h2>
+        <p>Feel free to reach out for collaborations, questions, or discussions on technology and health.</p>
+        <form>
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="message">Your Message:</label><br>
+            <textarea id="message" name="message" rows="4" required></textarea><br><br>
+
+            <input type="submit" value="Send Message">
+        </form>
+    </div>
+</section>
+
+<section class="social-icons">
+    <a href="https://www.facebook.com/belaykassanew.wasie" target="_blank" class="facebook" title="Facebook"><i class="fab fa-facebook"></i></a>
+    <a href="https://et.linkedin.com/in/belay-kassanew-54743720a" target="_blank" class="linkedin" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://www.youtube.com/c/yourchannel" target="_blank" class="youtube" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://t.me/yourtelegram" target="_blank" class="telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
+</section>
+
+<footer>
+    <p>&copy; 2025 Belay Kassanew | All rights reserved</p>
+</footer>
+
+</body>
+</html>
