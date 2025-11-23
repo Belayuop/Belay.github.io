@@ -1,158 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belay Kassanew - Personal Portfolio</title>
+
+<!-- Font Awesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+/* ===== GENERAL ===== */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f3f7f3;
     color: #333;
+    line-height: 1.6;
 }
+
+/* ===== HEADER ===== */
 header {
-    background-color: #4CAF50; /* Green */
+    background: linear-gradient(135deg, #2E8B57, #3CB371);
     color: white;
     text-align: center;
-    padding: 20px 0;
+    padding: 50px 20px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
 header h1 {
     margin: 0;
+    font-size: 2.5rem;
 }
+
+header p {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* ===== NAVIGATION ===== */
 nav {
-    background-color: #2E8B57; /* Dark Green */
-    overflow: hidden;
+    background-color: #2E8B57;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
+
 nav a {
-    float: left;
-    display: block;
     color: white;
-    padding: 14px 20px;
-    text-align: center;
+    padding: 12px 20px;
     text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
 }
+
 nav a:hover {
-    background-color: #3CB371; /* Lighter Green */
-}
-section {
-    padding: 60px 20px;
-}
-.container {
-    width: 80%;
-    margin: auto;
-}
-.intro, .skills, .portfolio, .contact {
-    background-color: white;
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.intro h2, .skills h2, .portfolio h2, .contact h2 {
-    margin-top: 0;
-}
-.skills ul, .portfolio ul {
-    list-style: none;
-    padding: 0;
-}
-.skills ul li, .portfolio ul li {
-    background-color: #f1f1f1;
-    margin: 5px 0;
-    padding: 8px;
+    background-color: #3CB371;
     border-radius: 5px;
 }
-footer {
-    background-color: #4CAF50; /* Green */
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
+
+/* ===== SECTIONS ===== */
+.section {
+    width: 85%;
+    max-width: 1100px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
 }
 
-/* Button style */
-input[type="submit"] {
-    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+.section:hover {
+    transform: translateY(-5px);
+}
+
+.section h2 {
+    color: #2E8B57;
+    margin-bottom: 20px;
+}
+
+/* ===== INTRO / PROFILE IMAGE ===== */
+.intro-box {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.profile-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #2E8B57;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* ===== LISTS ===== */
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+/* ===== PORTFOLIO CARDS ===== */
+.portfolio-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: #f4f9f4;
+    padding: 15px;
+    border-left: 5px solid #2E8B57;
+    border-radius: 12px;
+    transition: 0.3s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ===== CONTACT FORM ===== */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    border-radius: 10px;
+    border: 1px solid #bbb;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, textarea:focus {
+    border-color: #2E8B57;
+    box-shadow: 0 0 8px rgba(46,139,87,0.3);
+    outline: none;
+}
+
+textarea {
+    height: 150px;
+}
+
+.btn {
+    background: linear-gradient(45deg, #2E8B57, #3CB371);
     color: white;
-    font-size: 1.2rem;
-    padding: 15px 30px;
+    padding: 14px 30px;
     border: none;
     border-radius: 25px;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    transition: transform 0.3s, background 0.3s;
 }
 
-input[type="submit"]:hover {
-    background-color: #45a049;
+.btn:hover {
     transform: scale(1.05);
+    background: #2E8B57;
 }
 
-input[type="submit"]:active {
-    background-color: #388E3C;
-}
-
-/* Social Media Icons */
+/* ===== SOCIAL ICONS ===== */
 .social-icons {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 25px;
 }
 
 .social-icons a {
-    margin: 0 10px;
-    font-size: 30px;
-    transition: color 0.3s;
+    font-size: 36px;
+    margin: 0 12px;
+    transition: transform 0.3s, opacity 0.3s;
 }
 
 .social-icons a:hover {
-    opacity: 0.8;
+    transform: scale(1.2);
+    opacity: 0.7;
 }
 
-.facebook {
-    color: #1877F2;
+.facebook { color: #1877F2; }
+.linkedin { color: #0A66C2; }
+.youtube  { color: #FF0000; }
+.telegram { color: #0088CC; }
+
+/* ===== FOOTER ===== */
+footer {
+    background: #2E8B57;
+    text-align: center;
+    padding: 20px;
+    color: white;
+    margin-top: 40px;
+    border-radius: 15px 15px 0 0;
 }
 
-.linkedin {
-    color: #0A66C2;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+    .intro-box {
+        flex-direction: column;
+        text-align: center;
+    }
 }
+</style>
+</head>
 
-.youtube {
-    color: #FF0000;
-}
+<body>
 
-.telegram {
-    color: #0088CC;
-}
+<header>
+    <h1>Belay Kassanew</h1>
+    <p>Computer Science & Public Health Student | Educator | Researcher | IoT Enthusiast</p>
+</header>
 
-/* Portfolio */
-.portfolio h3, .skills h3 {
-    color: #2E8B57; /* Dark Green */
-}
+<nav>
+    <a href="#intro">Home</a>
+    <a href="#skills">Skills</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#learning">Online Learning</a>
+    <a href="#contact">Contact</a>
+</nav>
 
-/* Smaller text for Portfolio and Skills descriptions */
-.portfolio ul li, .skills ul li {
-    font-size: 0.9rem;
-}
+<!-- INTRO -->
+<section class="section" id="intro">
+    <h2>About Me</h2>
+    <div class="intro-box">
+        <img src="https://raw.githubusercontent.com/Belayuop/Belay.github.io/95807ee1ecae76a8310edf252b981f8450a7ed6b/belay.jpg" 
+             alt="Belay Kassanew" 
+             class="profile-image">
+        <p>
+            Hi, I’m <strong>Belay Kassanew</strong>. I study Computer Science and Public Health.
+            My interests include IoT systems, epidemiological research, smart homes, graphic design,
+            and helping students through online teaching.
+        </p>
+    </div>
+</section>
 
-/* Contact Section */
-.contact label {
-    font-size: 1rem;
-    display: block;
-    margin-bottom: 5px;
-}
+<!-- ONLINE LEARNING -->
+<section class="section" id="learning">
+    <h2>Online Learning Categories</h2>
+    <ul>
+        <li>Health Science Students</li>
+        <li>Computer Science & Software Students</li>
+        <li>Freshman Students</li>
+        <li>Remedial Students</li>
+        <li>Grade 12 Students</li>
+    </ul>
+</section>
 
-.contact input, .contact textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
+<!-- SKILLS -->
+<section class="section" id="skills">
+    <h2>Skills</h2>
+    <ul>
+        <li><strong>Web Development</strong></li>
+        <li><strong>Teaching & Mentorship</strong></li>
+        <li><strong>Epidemiological Research</strong></li>
+        <li><strong>Graphic Design & Creativity</strong></li>
+    </ul>
+</section>
 
-.contact textarea {
-    height: 150px;
-    resize: vertical;
-}
+<!-- PORTFOLIO -->
+<section class="section" id="portfolio">
+    <h2>Portfolio</h2>
 
-.contact textarea {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-}
+    <h3>Web Development</h3>
+    <div class="portfolio-list">
+        <div class="card">Smart Home System</div>
+        <div class="card">Health Dashboard</div>
+        <div class="card">Portfolio Website</div>
+        <div class="card">IoT Projects</div>
+    </div>
+
+    <h3>Epidemiological Research</h3>
+    <div class="portfolio-list">
+        <div class="card">Air Pollution Study</div>
+        <div class="card">COVID-19 Data Analysis</div>
+        <div class="card">Mental Health & Urbanization</div>
+        <div class="card">Health Trends Analysis</div>
+    </div>
+
+    <h3>Graphic Design</h3>
+    <div class="portfolio-list">
+        <div class="card">Health Campaign Posters</div>
+        <div class="card">UI/UX Web Mockups</div>
+        <div class="card">Infographics</div>
+        <div class="card">Branding & Logos</div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+    <h2>Contact Me</h2>
+    <p>Feel free to reach out for collaborations or questions.</p>
+
+    <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message"></textarea>
+        <button class="btn">Send Message</button>
+    </form>
+</section>
+
+<!-- SOCIAL -->
+<div class="social-icons">
+    <a href="https://www.facebook.com/belaykassanew.wasie" class="facebook"><i class="fab fa-facebook"></i></a>
+    <a href="https://et.linkedin.com/in/belay-kassanew-54743720a" class="linkedin"><i class="fab fa-linkedin"></i></a>
+    <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+    <a href="#" class="telegram"><i class="fab fa-telegram"></i></a>
+</div>
+
+<footer>
+    <p>© 2025 Belay Kassanew — All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
+
