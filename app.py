@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from flask_mail import Mail, Message
-import os, random
+import os, random, datetime
 
 # ===== CONFIG =====
 app = Flask(__name__)
@@ -13,12 +13,12 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 if not os.path.exists('uploads'):
     os.makedirs('uploads')
 
-# Email config (use your Gmail)
+# Email config (Gmail example)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'youremail@gmail.com'
-app.config['MAIL_PASSWORD'] = 'yourpassword'
+app.config['MAIL_USERNAME'] = 'youremail@gmail.com'  # replace
+app.config['MAIL_PASSWORD'] = 'yourpassword'         # replace
 
 # ===== INIT =====
 db = SQLAlchemy(app)
@@ -32,16 +32,26 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
-    role = db.Column(db.String(10))
+    role = db.Column(db.String(10))  # 'admin' or 'student'
     verified = db.Column(db.Boolean, default=False)
     verification_code = db.Column(db.String(6))
+    assignments = db.relationship('Assignment', backref='student', lazy=True)
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150))
     description = db.Column(db.Text)
-    files = db.Column(db.Text)
+    files = db.Column(db.Text)  # comma-separated filenames
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    assignments = db.relationship('Assignment', backref='course', lazy=True)
+
+class Assignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    filename = db.Column(db.String(200))
+    submitted_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 # ===== LOGIN =====
 @login_manager.user_loader
@@ -70,11 +80,11 @@ def register():
         user = User(name=name,email=email,password=password,role=role,verification_code=code)
         db.session.add(user)
         db.session.commit()
-        # Send email
+        # Send verification email
         msg = Message('Verify Email', sender=app.config['MAIL_USERNAME'], recipients=[email])
         msg.body = f"Your verification code: {code}"
         mail.send(msg)
-        flash('Registered! Check email for code')
+        flash('Registered! Check email for code.')
         return redirect('/verify')
     return render_template_string("""
     <h2>Register</h2>
@@ -148,14 +158,18 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    courses = Course.query.all()
     return render_template_string("""
     <h2>Welcome {{user.name}} ({{user.role}})</h2>
     {% if user.role=='admin' %}
         <a href="/upload">Upload Course</a><br>
     {% endif %}
     <a href="/courses">View Courses</a><br>
+    {% if user.role=='student' %}
+        <a href="/my-assignments">My Assignments</a><br>
+    {% endif %}
     <a href="/logout">Logout</a>
-    """, user=current_user)
+    """, user=current_user, courses=courses)
 
 # View Courses
 @app.route('/courses')
@@ -168,11 +182,23 @@ def courses():
         <h3>{{c.title}}</h3>
         <p>{{c.description}}</p>
         {% if c.files %}
-            Files: {{c.files}}
+            Files:
+            {% for f in c.files.split(',') %}
+                <a href="{{url_for('download_file', filename=f)}}">{{f}}</a><br>
+            {% endfor %}
+        {% endif %}
+        {% if user.role=='student' %}
+            <a href="/submit-assignment/{{c.id}}">Submit Assignment</a>
         {% endif %}
     {% endfor %}
     <a href="/dashboard">Back</a>
-    """, courses=courses)
+    """, courses=courses, user=current_user)
+
+# Download file
+@app.route('/uploads/<filename>')
+@login_required
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # Upload Course (Admin only)
 @app.route('/upload', methods=['GET','POST'])
@@ -202,6 +228,46 @@ def upload_course():
     </form>
     <a href="/dashboard">Back</a>
     """)
+
+# Submit Assignment (Student only)
+@app.route('/submit-assignment/<int:course_id>', methods=['GET','POST'])
+@login_required
+def submit_assignment(course_id):
+    if current_user.role != 'student':
+        return "Access Denied"
+    course = Course.query.get_or_404(course_id)
+    if request.method=='POST':
+        file = request.files['assignment']
+        filename = f"{current_user.id}_{course_id}_{file.filename}"
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        assignment = Assignment(student_id=current_user.id, course_id=course_id, filename=filename)
+        db.session.add(assignment)
+        db.session.commit()
+        flash('Assignment submitted')
+        return redirect('/my-assignments')
+    return render_template_string("""
+    <h2>Submit Assignment for {{course.title}}</h2>
+    <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="assignment" required><br>
+    <button type="submit">Submit</button>
+    </form>
+    <a href="/courses">Back</a>
+    """, course=course)
+
+# View My Assignments (Student)
+@app.route('/my-assignments')
+@login_required
+def my_assignments():
+    if current_user.role != 'student':
+        return "Access Denied"
+    assignments = Assignment.query.filter_by(student_id=current_user.id).all()
+    return render_template_string("""
+    <h2>My Assignments</h2>
+    {% for a in assignments %}
+        <p>{{a.course.title}} - <a href="{{url_for('download_file', filename=a.filename)}}">{{a.filename}}</a> ({{a.submitted_at}})</p>
+    {% endfor %}
+    <a href="/dashboard">Back</a>
+    """, assignments=assignments)
 
 # Run App
 if __name__=='__main__':
