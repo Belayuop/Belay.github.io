@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Belay Kassanew - Personal Portfolio</title>
-
-<!-- Font Awesome Icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-<style>
-/* ===== GENERAL ===== */
+/* ===== GENERAL SETTINGS ===== */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
@@ -17,6 +6,13 @@ body {
     background-color: #f3f7f3;
     color: #333;
     line-height: 1.6;
+    overflow-x: hidden; /* prevent horizontal scroll */
+}
+
+.container {
+    width: 80%;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 /* ===== HEADER ===== */
@@ -66,18 +62,17 @@ nav a:hover {
 
 /* ===== SECTIONS ===== */
 .section {
-    width: 85%;
-    max-width: 1100px;
-    margin: 40px auto;
     background: white;
     padding: 30px;
+    margin: 40px auto;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .section:hover {
     transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 .section h2 {
@@ -85,12 +80,13 @@ nav a:hover {
     margin-bottom: 20px;
 }
 
-/* ===== INTRO / PROFILE IMAGE ===== */
+/* ===== INTRO / PROFILE ===== */
 .intro-box {
     display: flex;
     align-items: center;
     gap: 25px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .profile-image {
@@ -129,7 +125,7 @@ li {
     padding: 15px;
     border-left: 5px solid #2E8B57;
     border-radius: 12px;
-    transition: 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
@@ -214,116 +210,26 @@ footer {
         text-align: center;
     }
 }
-</style>
-</head>
 
-<body>
+/* ===== FLOATING HEALTH & TECH ICONS ===== */
+.floating-icon {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    z-index: 0;
+    opacity: 0.7;
+    transition: transform 0.3s ease;
+}
 
-<header>
-    <h1>Belay Kassanew</h1>
-    <p>Computer Science & Public Health Student | Educator | Researcher | IoT Enthusiast</p>
-</header>
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(15deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
 
-<nav>
-    <a href="#intro">Home</a>
-    <a href="#skills">Skills</a>
-    <a href="#portfolio">Portfolio</a>
-    <a href="#learning">Online Learning</a>
-    <a href="#contact">Contact</a>
-</nav>
-
-<!-- INTRO -->
-<section class="section" id="intro">
-    <h2>About Me</h2>
-    <div class="intro-box">
-        <img src="https://raw.githubusercontent.com/Belayuop/Belay.github.io/95807ee1ecae76a8310edf252b981f8450a7ed6b/belay.jpg" 
-             alt="Belay Kassanew" 
-             class="profile-image">
-        <p>
-            Hi, I’m <strong>Belay Kassanew</strong>. I study Computer Science and Public Health.
-            My interests include IoT systems, epidemiological research, smart homes, graphic design,
-            and helping students through online teaching.
-        </p>
-    </div>
-</section>
-
-<!-- ONLINE LEARNING -->
-<section class="section" id="learning">
-    <h2>Online Learning Categories</h2>
-    <ul>
-        <li>Health Science Students</li>
-        <li>Computer Science & Software Students</li>
-        <li>Freshman Students</li>
-        <li>Remedial Students</li>
-        <li>Grade 12 Students</li>
-    </ul>
-</section>
-
-<!-- SKILLS -->
-<section class="section" id="skills">
-    <h2>Skills</h2>
-    <ul>
-        <li><strong>Web Development</strong></li>
-        <li><strong>Teaching & Mentorship</strong></li>
-        <li><strong>Epidemiological Research</strong></li>
-        <li><strong>Graphic Design & Creativity</strong></li>
-    </ul>
-</section>
-
-<!-- PORTFOLIO -->
-<section class="section" id="portfolio">
-    <h2>Portfolio</h2>
-
-    <h3>Web Development</h3>
-    <div class="portfolio-list">
-        <div class="card">Smart Home System</div>
-        <div class="card">Health Dashboard</div>
-        <div class="card">Portfolio Website</div>
-        <div class="card">IoT Projects</div>
-    </div>
-
-    <h3>Epidemiological Research</h3>
-    <div class="portfolio-list">
-        <div class="card">Air Pollution Study</div>
-        <div class="card">COVID-19 Data Analysis</div>
-        <div class="card">Mental Health & Urbanization</div>
-        <div class="card">Health Trends Analysis</div>
-    </div>
-
-    <h3>Graphic Design</h3>
-    <div class="portfolio-list">
-        <div class="card">Health Campaign Posters</div>
-        <div class="card">UI/UX Web Mockups</div>
-        <div class="card">Infographics</div>
-        <div class="card">Branding & Logos</div>
-    </div>
-</section>
-
-<!-- CONTACT -->
-<section class="section" id="contact">
-    <h2>Contact Me</h2>
-    <p>Feel free to reach out for collaborations or questions.</p>
-
-    <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
-        <textarea placeholder="Your Message"></textarea>
-        <button class="btn">Send Message</button>
-    </form>
-</section>
-
-<!-- SOCIAL -->
-<div class="social-icons">
-    <a href="https://www.facebook.com/belaykassanew.wasie" class="facebook"><i class="fab fa-facebook"></i></a>
-    <a href="https://et.linkedin.com/in/belay-kassanew-54743720a" class="linkedin"><i class="fab fa-linkedin"></i></a>
-    <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
-    <a href="#" class="telegram"><i class="fab fa-telegram"></i></a>
-</div>
-
-<footer>
-    <p>© 2025 Belay Kassanew — All Rights Reserved</p>
-</footer>
-
-</body>
-</html>
+#icon1 { top: 100px; left: 20%; animation: float 6s ease-in-out infinite; }
+#icon2 { top: 200px; left: 70%; animation: float 8s ease-in-out infinite; }
+#icon3 { top: 400px; left: 40%; animation: float 5s ease-in-out infinite; }
+#icon4 { top: 600px; left: 80%; animation: float 7s ease-in-out infinite; }
+#icon5 { top: 300px; left: 10%; animation: float 6.5s ease-in-out infinite; }
 
