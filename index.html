@@ -85,7 +85,7 @@ nav a:hover {
     margin-bottom: 20px;
 }
 
-/* ===== INTRO / PROFILE IMAGE ===== */
+/* ===== INTRO ===== */
 .intro-box {
     display: flex;
     align-items: center;
@@ -108,16 +108,7 @@ nav a:hover {
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-/* ===== LISTS ===== */
-ul {
-    padding-left: 20px;
-}
-
-li {
-    margin-bottom: 10px;
-}
-
-/* ===== PORTFOLIO CARDS ===== */
+/* ===== PORTFOLIO ===== */
 .portfolio-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -194,7 +185,7 @@ textarea {
 
 .facebook { color: #1877F2; }
 .linkedin { color: #0A66C2; }
-.youtube  { color: #FF0000; }
+.youtube { color: #FF0000; }
 .telegram { color: #0088CC; }
 
 /* ===== FOOTER ===== */
@@ -205,14 +196,6 @@ footer {
     color: white;
     margin-top: 40px;
     border-radius: 15px 15px 0 0;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 700px) {
-    .intro-box {
-        flex-direction: column;
-        text-align: center;
-    }
 }
 </style>
 </head>
@@ -229,6 +212,8 @@ footer {
     <a href="#skills">Skills</a>
     <a href="#portfolio">Portfolio</a>
     <a href="#learning">Online Learning</a>
+    <a href="#support">Support</a>
+    <a href="#chatbot">AI Chatbot</a>
     <a href="#contact">Contact</a>
 </nav>
 
@@ -236,9 +221,7 @@ footer {
 <section class="section" id="intro">
     <h2>About Me</h2>
     <div class="intro-box">
-        <img src="https://raw.githubusercontent.com/Belayuop/Belay.github.io/95807ee1ecae76a8310edf252b981f8450a7ed6b/belay.jpg" 
-             alt="Belay Kassanew" 
-             class="profile-image">
+        <img src="belay.jpg" class="profile-image">
         <p>
             Hi, I’m <strong>Belay Kassanew</strong>. I study Computer Science and Public Health.
             My interests include IoT systems, epidemiological research, smart homes, graphic design,
@@ -256,6 +239,18 @@ footer {
         <li>Freshman Students</li>
         <li>Remedial Students</li>
         <li>Grade 12 Students</li>
+    </ul>
+</section>
+
+<!-- ⭐ NEW: STUDENT SUPPORT CENTER -->
+<section class="section" id="support">
+    <h2>Student Support Center</h2>
+    <ul>
+        <li><strong>PDF Notes</strong> — Downloadable exam-focused notes</li>
+        <li><strong>Video Tutorials</strong> — Short and clear explanations</li>
+        <li><strong>Past Exam Papers</strong> — With structured answers</li>
+        <li><strong>Study Plans</strong> — Weekly & monthly schedules</li>
+        <li><strong>Quizzes</strong> — Self-assessment interactive tests</li>
     </ul>
 </section>
 
@@ -299,6 +294,23 @@ footer {
     </div>
 </section>
 
+<!-- ⭐ NEW: AI CHATBOT ASSISTANT -->
+<section class="section" id="chatbot">
+    <h2>AI Chatbot Assistant — BelayBot</h2>
+    <p>Your personal AI assistant for learning, questions, and guidance.</p>
+
+    <div class="card">
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Ask academic questions</li>
+            <li>Get summaries & explanations</li>
+            <li>Practice quizzes</li>
+            <li>Study support 24/7</li>
+        </ul>
+        <button class="btn">Open BelayBot</button>
+    </div>
+</section>
+
 <!-- CONTACT -->
 <section class="section" id="contact">
     <h2>Contact Me</h2>
@@ -326,4 +338,3 @@ footer {
 
 </body>
 </html>
-
