@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, flash, render_template_string, session, send_from_directory
+from flask import Flask, request, redirect, url_for, flash, render_template, session, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
@@ -10,8 +10,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret123'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///online_learning.db'
 app.config['UPLOAD_FOLDER'] = 'uploads'
-if not os.path.exists('uploads'):
-    os.makedirs('uploads')
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 # Email config (Gmail example)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -53,6 +53,18 @@ class Assignment(db.Model):
     filename = db.Column(db.String(200))
     submitted_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
+class Quiz(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(500))
+    options = db.Column(db.Text)  # comma-separated options
+    answer = db.Column(db.String(200))
+
+class QuizResult(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    score = db.Column(db.Integer)
+    taken_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
 # ===== LOGIN =====
 @login_manager.user_loader
 def load_user(user_id):
@@ -60,15 +72,97 @@ def load_user(user_id):
 
 # ===== ROUTES =====
 
-# Home
 @app.route('/')
 def index():
-    return render_template_string("""
-    <h1>Welcome to Online Learning Platform</h1>
-    <a href="/register">Register</a> | <a href="/login">Login</a>
-    """)
+    return render_template("index.html")  # Use templates folder instead of inline HTML
 
-# Register
+# ===== AI Chatbot Endpoint =====
+@app.route('/chatbot', methods=['POST'])
+@login_required
+def chatbot():
+    user_msg = request.json.get("message")
+    # Replace with your AI logic; here simple echo:
+    bot_reply = f"BelayBot says: You typed '{user_msg}'"
+    return jsonify({"response": bot_reply})
+
+# ===== Quiz Routes =====
+@app.route('/quizzes')
+@login_required
+def quizzes():
+    all_quizzes = Quiz.query.all()
+    return render_template("quizzes.html", quizzes=all_quizzes)
+
+@app.route('/submit-quiz', methods=['POST'])
+@login_required
+def submit_quiz():
+    score = 0
+    for key, value in request.form.items():
+        quiz = Quiz.query.get(int(key))
+        if quiz.answer.strip().lower() == value.strip().lower():
+            score += 1
+    result = QuizResult(student_id=current_user.id, score=score)
+    db.session.add(result)
+    db.session.commit()
+    flash(f"You scored {score} out of {Quiz.query.count()}")
+    return redirect(url_for('quizzes'))
+
+# ===== Courses, Upload, Assignment =====
+@app.route('/courses')
+@login_required
+def courses():
+    courses = Course.query.all()
+    return render_template("courses.html", courses=courses, user=current_user)
+
+@app.route('/upload', methods=['GET','POST'])
+@login_required
+def upload_course():
+    if current_user.role != 'admin':
+        return "Access Denied"
+    if request.method=='POST':
+        title = request.form['title']
+        description = request.form['description']
+        files = request.files.getlist('files')
+        filenames = []
+        for f in files:
+            safe_name = f"{datetime.datetime.utcnow().timestamp()}_{f.filename}"
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], safe_name))
+            filenames.append(safe_name)
+        course = Course(title=title, description=description, files=','.join(filenames), created_by=current_user.id)
+        db.session.add(course)
+        db.session.commit()
+        flash('Course uploaded successfully!')
+    return render_template("upload_course.html")
+
+@app.route('/submit-assignment/<int:course_id>', methods=['GET','POST'])
+@login_required
+def submit_assignment(course_id):
+    if current_user.role != 'student':
+        return "Access Denied"
+    course = Course.query.get_or_404(course_id)
+    if request.method=='POST':
+        file = request.files['assignment']
+        filename = f"{current_user.id}_{course_id}_{file.filename}"
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        assignment = Assignment(student_id=current_user.id, course_id=course_id, filename=filename)
+        db.session.add(assignment)
+        db.session.commit()
+        flash('Assignment submitted!')
+        return redirect(url_for('my_assignments'))
+    return render_template("submit_assignment.html", course=course)
+
+@app.route('/my-assignments')
+@login_required
+def my_assignments():
+    assignments = Assignment.query.filter_by(student_id=current_user.id).all()
+    return render_template("my_assignments.html", assignments=assignments)
+
+# ===== File Downloads =====
+@app.route('/uploads/<filename>')
+@login_required
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+# ===== Email Verification, Register, Login, Logout =====
 @app.route('/register', methods=['GET','POST'])
 def register():
     if request.method=='POST':
@@ -84,23 +178,10 @@ def register():
         msg = Message('Verify Email', sender=app.config['MAIL_USERNAME'], recipients=[email])
         msg.body = f"Your verification code: {code}"
         mail.send(msg)
-        flash('Registered! Check email for code.')
-        return redirect('/verify')
-    return render_template_string("""
-    <h2>Register</h2>
-    <form method="POST">
-    <input name="name" placeholder="Full Name" required><br>
-    <input name="email" placeholder="Email" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
-    <select name="role">
-        <option value="student">Student</option>
-        <option value="admin">Admin</option>
-    </select><br>
-    <button type="submit">Register</button>
-    </form>
-    """)
+        flash('Registered! Check your email for verification code.')
+        return redirect(url_for('verify'))
+    return render_template("register.html")
 
-# Verify Email
 @app.route('/verify', methods=['GET','POST'])
 def verify():
     if request.method=='POST':
@@ -110,19 +191,11 @@ def verify():
         if user and user.verification_code==code:
             user.verified = True
             db.session.commit()
-            flash('Verified! You can login.')
-            return redirect('/login')
-        flash('Invalid code')
-    return render_template_string("""
-    <h2>Verify Email</h2>
-    <form method="POST">
-    <input name="email" placeholder="Email" required><br>
-    <input name="code" placeholder="6-digit Code" required><br>
-    <button type="submit">Verify</button>
-    </form>
-    """)
+            flash('Verified! You can login now.')
+            return redirect(url_for('login'))
+        flash('Invalid code!')
+    return render_template("verify.html")
 
-# Login
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method=='POST':
@@ -130,146 +203,32 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
         if not user:
-            flash('User not found')
+            flash('User not found!')
         elif not user.verified:
-            flash('Verify email first')
+            flash('Verify your email first!')
         elif check_password_hash(user.password, password):
             login_user(user)
-            return redirect('/dashboard')
+            return redirect(url_for('dashboard'))
         else:
-            flash('Wrong password')
-    return render_template_string("""
-    <h2>Login</h2>
-    <form method="POST">
-    <input name="email" placeholder="Email" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
-    <button type="submit">Login</button>
-    </form>
-    """)
+            flash('Wrong password!')
+    return render_template("login.html")
 
-# Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect('/login')
+    return redirect(url_for('login'))
 
-# Dashboard
+# ===== Dashboard =====
 @app.route('/dashboard')
 @login_required
 def dashboard():
     courses = Course.query.all()
-    return render_template_string("""
-    <h2>Welcome {{user.name}} ({{user.role}})</h2>
-    {% if user.role=='admin' %}
-        <a href="/upload">Upload Course</a><br>
-    {% endif %}
-    <a href="/courses">View Courses</a><br>
-    {% if user.role=='student' %}
-        <a href="/my-assignments">My Assignments</a><br>
-    {% endif %}
-    <a href="/logout">Logout</a>
-    """, user=current_user, courses=courses)
+    return render_template("dashboard.html", user=current_user, courses=courses)
 
-# View Courses
-@app.route('/courses')
-@login_required
-def courses():
-    courses = Course.query.all()
-    return render_template_string("""
-    <h2>Courses</h2>
-    {% for c in courses %}
-        <h3>{{c.title}}</h3>
-        <p>{{c.description}}</p>
-        {% if c.files %}
-            Files:
-            {% for f in c.files.split(',') %}
-                <a href="{{url_for('download_file', filename=f)}}">{{f}}</a><br>
-            {% endfor %}
-        {% endif %}
-        {% if user.role=='student' %}
-            <a href="/submit-assignment/{{c.id}}">Submit Assignment</a>
-        {% endif %}
-    {% endfor %}
-    <a href="/dashboard">Back</a>
-    """, courses=courses, user=current_user)
-
-# Download file
-@app.route('/uploads/<filename>')
-@login_required
-def download_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-# Upload Course (Admin only)
-@app.route('/upload', methods=['GET','POST'])
-@login_required
-def upload_course():
-    if current_user.role != 'admin':
-        return "Access Denied"
-    if request.method=='POST':
-        title = request.form['title']
-        description = request.form['description']
-        files = request.files.getlist('files')
-        filenames = []
-        for f in files:
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
-            filenames.append(f.filename)
-        course = Course(title=title, description=description, files=','.join(filenames), created_by=current_user.id)
-        db.session.add(course)
-        db.session.commit()
-        flash('Course uploaded')
-    return render_template_string("""
-    <h2>Upload Course</h2>
-    <form method="POST" enctype="multipart/form-data">
-    <input name="title" placeholder="Course Title" required><br>
-    <textarea name="description" placeholder="Course Description"></textarea><br>
-    <input type="file" name="files" multiple><br>
-    <button type="submit">Upload</button>
-    </form>
-    <a href="/dashboard">Back</a>
-    """)
-
-# Submit Assignment (Student only)
-@app.route('/submit-assignment/<int:course_id>', methods=['GET','POST'])
-@login_required
-def submit_assignment(course_id):
-    if current_user.role != 'student':
-        return "Access Denied"
-    course = Course.query.get_or_404(course_id)
-    if request.method=='POST':
-        file = request.files['assignment']
-        filename = f"{current_user.id}_{course_id}_{file.filename}"
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        assignment = Assignment(student_id=current_user.id, course_id=course_id, filename=filename)
-        db.session.add(assignment)
-        db.session.commit()
-        flash('Assignment submitted')
-        return redirect('/my-assignments')
-    return render_template_string("""
-    <h2>Submit Assignment for {{course.title}}</h2>
-    <form method="POST" enctype="multipart/form-data">
-    <input type="file" name="assignment" required><br>
-    <button type="submit">Submit</button>
-    </form>
-    <a href="/courses">Back</a>
-    """, course=course)
-
-# View My Assignments (Student)
-@app.route('/my-assignments')
-@login_required
-def my_assignments():
-    if current_user.role != 'student':
-        return "Access Denied"
-    assignments = Assignment.query.filter_by(student_id=current_user.id).all()
-    return render_template_string("""
-    <h2>My Assignments</h2>
-    {% for a in assignments %}
-        <p>{{a.course.title}} - <a href="{{url_for('download_file', filename=a.filename)}}">{{a.filename}}</a> ({{a.submitted_at}})</p>
-    {% endfor %}
-    <a href="/dashboard">Back</a>
-    """, assignments=assignments)
-
-# Run App
+# ===== RUN =====
 if __name__=='__main__':
     db.create_all()
     app.run(debug=True)
+
+
